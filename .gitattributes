@@ -1,0 +1,11 @@
+# 行尾统一成 LF —— CI 跑在 Linux，本地可能在 Windows。
+# 不加这个的话，Windows 检出会把文本转成 CRLF，生成脚本产出的文件就又变回 LF，
+# 于是 CI 里那条「产物必须与源码同步」的 git diff 检查会误报失败。
+* text=auto eol=lf
+
+# 二进制不要动
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary

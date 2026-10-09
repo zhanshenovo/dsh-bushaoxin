@@ -1,0 +1,65 @@
+name: CI
+
+# 每次推送和 PR 都跑 35 项断言。
+# 这个项目零依赖，所以不需要 install 步骤 —— 直接跑测试。
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 插件要求 node >= 20
+        node: ['20', '22']
+    name: test (node ${{ matrix.node }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: 零依赖确认
+        run: |
+          node -e "
+          const p = require('./package.json');
+          const deps = Object.keys(p.dependencies ?? {});
+          const dev = Object.keys(p.devDependencies ?? {});
+          if (deps.length > 0 || dev.length > 0) {
+            console.error('这个项目应当是零依赖，但发现了:', [...deps, ...dev].join(', '));
+            process.exit(1);
+          }
+          console.log('确认零依赖 ✓');
+          "
+
+      - name: 引擎自测（一期回归 + 三期改写引擎）
+        run: npm test
+
+      - name: 演示页自测
+        run: node test/demo-page-selftest.mjs
+
+      - name: 所有路由都必须是只读的（除了滑条的 POST）
+        run: |
+          node -e "
+          const fs = require('fs');
+          const src = fs.readFileSync('lib/index.js', 'utf8');
+          // 写方法只允许出现在 /dsh-bushaoxin/style 这一个地方
+          const posts = [...src.matchAll(/request\.method !== 'POST'/g)].length;
+          if (posts !== 1) {
+            console.error('写入口应当恰好 1 个，实际', posts, '个');
+            process.exit(1);
+          }
+          console.log('写入口数量正确（1 个：滑条）✓');
+          "
+
+      - name: 生成的素材必须与源码同步
+        run: |
+          npm run demo
+          npm run video
+          git diff --exit-code --stat
