@@ -1,0 +1,54 @@
+{
+  "name": "dsh-bushaoxin",
+  "version": "0.2.0",
+  "description": "不烧心文风层 + 短剧改写引擎 —— 让助手把\"便宜的路有坑、慢的路可靠\"说得像那个梗，还能把任意文本拧成短剧。贵是贵了点，但吃了不烧心。",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./client/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/",
+    "client/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node test/selftest.mjs && node test/drama-selftest.mjs",
+    "preview": "node test/preview.mjs",
+    "demo": "node test/demo-script.mjs && node test/demo-card.mjs",
+    "video": "node test/video-assets.mjs"
+  },
+  "dsh": {
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-theme"
+      ],
+      "platform": "web"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "plugin-market",
+    "不烧心",
+    "文风",
+    "网络梗"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhanshenovo/dsh-bushaoxin.git"
+  },
+  "homepage": "https://github.com/zhanshenovo/dsh-bushaoxin#readme",
+  "bugs": {
+    "url": "https://github.com/zhanshenovo/dsh-bushaoxin/issues"
+  },
+  "license": "MIT"
+}

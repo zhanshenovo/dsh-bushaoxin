@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>封面 · 浅色信息式</title>
+<style>
+  /* 配色取自参考封面采样：#ffffff 底 / #0f1e43 标题 / #92a4be 次级 */
+  html,body{margin:0;height:100%;background:#222}
+  body{display:flex;align-items:center;justify-content:center}
+  .cover{position:relative;width:1146px;height:717px;overflow:hidden;background:#fff;
+    font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    padding:0 62px;display:flex;flex-direction:column;justify-content:center;gap:26px}
+  /* 右上角极淡的色块，避免纯白太空。压得很低，不参与构图。 */
+  .glow{position:absolute;right:-200px;top:-220px;width:520px;height:520px;border-radius:50%;
+    background:radial-gradient(closest-side, rgba(34,211,238,.07), transparent 70%)}
+
+  .row{display:flex;align-items:center;gap:34px;position:relative;z-index:2}
+  .icon{width:150px;height:150px;border-radius:34px;flex:0 0 auto;
+    background:linear-gradient(150deg,#0f1e43,#26518f 60%,#22d3ee);
+    display:flex;align-items:center;justify-content:center;
+    font-size:60px;font-weight:900;color:#ecf548;
+    box-shadow:0 12px 30px rgba(15,30,67,.22)}
+  .head{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .title{font-size:78px;font-weight:900;color:#0f1e43;letter-spacing:3px;line-height:1.05}
+  .sub{font-size:30px;font-weight:600;color:#92a4be;letter-spacing:.5px}
+
+  .tags{display:flex;flex-wrap:wrap;gap:16px;position:relative;z-index:2}
+  .tag{font-size:25px;font-weight:600;color:#0f1e43;
+    border:2px solid #e6ebf2;border-radius:999px;padding:12px 30px;background:#fff;
+    box-shadow:0 2px 8px rgba(15,30,67,.04)}
+  .tag.hot{border-color:#0f1e43;background:#0f1e43;color:#fff}
+
+  .hook{position:relative;z-index:2;font-size:30px;font-weight:700;color:#0f1e43;
+    border-left:8px solid #ecf548;padding-left:20px}
+  .hook b{color:#1f6fd0}
+
+  .meta{position:absolute;left:0;right:0;bottom:0;height:50px;
+    display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+    background:linear-gradient(0deg, rgba(120,130,145,.85), rgba(120,130,145,0));
+    font-size:20px;color:#fff;font-variant-numeric:tabular-nums}
+</style></head>
+<body>
+<div class="cover">
+  <div class="glow"></div>
+
+  <div class="row">
+    <div class="icon">不</div>
+    <div class="head">
+      <div class="title">不烧心 · 文风层</div>
+      <div class="sub">把技术警告换成你记得住的说法</div>
+    </div>
+  </div>
+
+  <div class="tags">
+    <div class="tag hot">对话文风</div>
+    <div class="tag">短剧改写</div>
+    <div class="tag">滑条调辣度</div>
+    <div class="tag">35 项测试</div>
+  </div>
+
+  <div class="hook">它不改代码，只改你<b>会不会记住</b></div>
+
+  <div class="meta"><span>▶ 1.2万　💬 86</span><span>02:14</span></div>
+</div>
+</body></html>

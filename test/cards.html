@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>不烧心 · 图文卡片（9 张）</title>
+<style>
+:root{--bg:#040913;--panel:#0b1730;--ink:#e8eefb;--dim:#8fa6c8;--cyan:#22d3ee;--yel:#ecf548;--line:#1c2c4a}
+*{box-sizing:border-box}
+body{margin:0;background:#141414;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px}
+.card{position:relative;width:1080px;height:1080px;overflow:hidden;
+  background:radial-gradient(110% 80% at 78% 30%, #16305c 0%, #0a1730 40%, #040913 74%), #040913;
+  color:var(--ink);padding:88px 84px;display:flex;flex-direction:column}
+.grid{position:absolute;inset:0;opacity:.05;
+  background-image:linear-gradient(#8fb6ff 1px,transparent 1px),linear-gradient(90deg,#8fb6ff 1px,transparent 1px);
+  background-size:64px 64px}
+.blob{position:absolute;right:-160px;top:-160px;width:620px;height:620px;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(34,211,238,.12), transparent 70%)}
+.kicker{font-size:30px;font-weight:700;letter-spacing:3px;color:var(--cyan)}
+.title{font-size:74px;font-weight:900;line-height:1.18;letter-spacing:2px;margin-top:20px}
+.title .y{color:var(--yel)}
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:30px;min-height:0}
+/* 内容比一屏少时，别让它撑满：留白集中在底部，构图更稳。 */
+.body.tight{flex:0 1 auto;justify-content:flex-start;margin-top:26px}
+.foot{margin-top:auto;font-size:30px;line-height:1.6;color:var(--dim);font-weight:600}
+
+/* 封面卡 */
+.cover{padding:0;display:flex;flex-direction:column;justify-content:center;padding:96px 88px}
+.eyebrow{font-size:32px;font-weight:700;letter-spacing:2px;color:var(--cyan)}
+.bigEn{font-size:112px;font-weight:800;letter-spacing:3px;line-height:1;margin-top:18px}
+.bigEn .c{color:var(--cyan)}
+.bigZh{font-size:206px;font-weight:900;line-height:1.02;letter-spacing:12px;color:var(--yel);
+  -webkit-text-stroke:9px #05070f;paint-order:stroke fill;margin-top:6px}
+.coversub{font-size:40px;font-weight:700;color:#dbe8ff;margin-top:26px}
+.coverfoot{position:absolute;left:88px;bottom:78px;font-size:29px;color:var(--dim);font-weight:600}
+
+.quote{background:rgba(255,255,255,.045);border-left:8px solid var(--line);border-radius:0 16px 16px 0;
+  padding:30px 34px;font-family:ui-monospace,Consolas,monospace;font-size:34px;line-height:1.6;color:#c9d8f0}
+pre{margin:0;white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;font-size:27px;line-height:1.62;
+  background:rgba(255,255,255,.05);border:2px solid var(--line);border-radius:18px;padding:34px 36px;color:#dbe8ff}
+.hl{margin-top:8px;background:rgba(255,123,114,.14);border-left:8px solid #ff7b72;border-radius:0 14px 14px 0;
+  padding:22px 28px;font-family:ui-monospace,Consolas,monospace;font-size:32px;color:#ffd7cc}
+
+/* 对比卡 */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.side{background:rgba(255,255,255,.04);border:2px solid var(--line);border-radius:20px;padding:28px 26px}
+.side.now{border-color:var(--yel);background:rgba(236,245,72,.07)}
+.side h4{margin:0 0 16px;font-size:27px;font-weight:800;color:var(--dim);letter-spacing:1px}
+.side.now h4{color:var(--yel)}
+.side p{margin:0 0 14px;font-size:26px;line-height:1.55}
+.side p:last-child{margin-bottom:0}
+.side.now p{color:#fff;font-weight:600}
+
+/* 六宫格 */
+.grid6{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.cell{background:rgba(255,255,255,.04);border:2px solid var(--line);border-radius:18px;padding:26px 28px}
+.cell b{display:block;font-size:27px;color:var(--cyan);letter-spacing:2px;margin-bottom:12px}
+.cell span{font-size:33px;font-weight:700;color:#fff}
+
+/* 滑条卡 */
+.dial{background:rgba(255,255,255,.05);border:2px solid var(--line);border-radius:24px;padding:44px 40px}
+.track{height:22px;border-radius:12px;position:relative;
+  background:linear-gradient(90deg,#e8f0e2,#f7e3b6,#f09a4a,#d94f2b)}
+.knob{position:absolute;top:-19px;left:66%;width:60px;height:60px;border-radius:50%;background:#fff;
+  border:8px solid #d94f2b;box-shadow:0 8px 26px rgba(0,0,0,.5)}
+.stops{display:flex;justify-content:space-between;margin-top:34px;font-size:36px;font-weight:800}
+.stops span{color:var(--dim)}
+.stops span.on{color:var(--yel)}
+.notes{display:flex;justify-content:space-between;margin-top:14px;font-size:22px;color:var(--dim)}
+
+/* 底线卡 */
+.checks{display:flex;flex-direction:column;gap:24px}
+.check{display:flex;gap:20px;align-items:flex-start;font-size:34px;line-height:1.55}
+.check i{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--yel);color:#05070f;
+  font-style:normal;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:28px}
+
+/* 结尾卡 */
+.end{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%}
+.end .zh{font-size:180px;font-weight:900;color:var(--yel);letter-spacing:14px;
+  -webkit-text-stroke:8px #05070f;paint-order:stroke fill}
+.end .en{font-size:40px;color:var(--cyan);letter-spacing:6px;font-weight:700;margin-top:18px}
+.end .line{font-size:38px;color:#dbe8ff;font-weight:600;margin-top:44px}
+.end .hint{margin-top:auto;font-size:28px;color:var(--dim)}
+</style></head>
+<body><div class="wrap">
+<div class="card " data-card="1"><div class="grid"></div><div class="blob"></div>
+      <div class="cover">
+        <div class="eyebrow">DeepSeek Harness 插件</div>
+        <div class="bigEn">BU<span class="c">SHAOXIN</span></div>
+        <div class="bigZh">不烧心</div>
+        <div class="coversub">把技术警告换成你记得住的说法</div>
+      </div>
+      <div class="coverfoot">开源 · 本地安装 · 35 项测试</div></div>
+<div class="card " data-card="2"><div class="grid"></div><div class="blob"></div>
+      <div class="kicker">01 · 痛点</div>
+      <div class="title">这句话是对的<br><span class="y">但它没用</span></div>
+      <div class="body"><div class="quote">「不建议使用 --force，它会导致 lockfile 与<br>package.json 不一致，可能引发构建失败。」</div></div>
+      <div class="foot">它和我们每天看的几百条提示，长得一模一样</div></div>
+<div class="card " data-card="3"><div class="grid"></div><div class="blob"></div>
+      <div class="kicker">02 · 换一种说法</div>
+      <div class="title">同一条建议，两种讲法</div>
+      <div class="body tight"><div class="vs">
+        <div class="side"><h4>标准助手</h4><p>不建议使用 --force，</p><p>会导致构建失败。</p></div>
+        <div class="side now"><h4>装了不烧心</h4><p>那家「一键装依赖」的店挂出招牌：「充值即送 --force，三秒解决，包过。」</p><p>它没说它改了什么，也没说它没看你的 Node 版本。</p></div>
+      </div></div>
+      <div class="foot">技术信息一个字没少</div></div>
+<div class="card " data-card="4"><div class="grid"></div><div class="blob"></div>
+      <div class="kicker">03 · 结果长这样</div>
+      <div class="title">它开始用黑心店讲 --force</div>
+      <div class="body tight">
+        <div class="quote">那家「一键装依赖」的店挂出招牌：「充值即送 --force，三秒解决，包过。」<br>物证：npm install --force 之后本地能跑，CI 挂了（提到 npm）<br>📍 技术真话：--force 会让 lockfile 与 package.json 脱节，本地能跑、CI 挂掉。先 git diff package-lock.json 再决定要不要留。</div>
+      </div>
+      <div class="foot">留在最后的，永远是真实技术结论</div></div>
+<div class="card " data-card="5"><div class="grid"></div><div class="blob"></div>
+      <div class="kicker">04 · 不复读同一句</div>
+      <div class="title">每个领域，换一套行话</div>
+      <div class="body"><div class="grid6">
+        <div class="cell"><b>依赖</b><span>锁要对得上版，版要对得上货</span></div><div class="cell"><b>异常</b><span>账要记</span></div><div class="cell"><b>时区</b><span>钟要对得上灶</span></div><div class="cell"><b>密钥</b><span>钥匙不进仓库</span></div><div class="cell"><b>测试</b><span>秤先校，再谈肉价</span></div><div class="cell"><b>成本</b><span>钱要花在明细上</span></div>
+      </div></div>
+      <div class="foot">骨架不变，说法每次都新</div></div>
+<div class="card " data-card="6"><div class="grid"></div><div class="blob"></div>
+      <div class="kicker">05 · 辣度你说了算</div>
+      <div class="title">点一下，拉出滑条</div>
+      <div class="body"><div class="dial">
+        <div class="track"><div class="knob"></div></div>
+        <div class="stops"><span class="">关</span><span class="">轻</span><span class="on">中</span><span class="">重</span></div>
+        <div class="notes">完全不用梗一段最多一次每两三轮一次基本每轮都带</div>
+      </div></div>
+      <div class="foot">拖错了再拖回去，不用重启</div></div>
+<div class="card " data-card="7"><div class="grid"></div><div class="blob"></div>
+      <div class="kicker">06 · 说点实话</div>
+      <div class="title"><span class="y">它不提升效率</span></div>
+      <div class="body"><div class="quote">它不改代码，不改模型，不加功能。</div><div class="quote">它改的只是你听警告时的注意力。</div></div>
+      <div class="foot">往"提升效率"上写就是骗人，装上发现啥也没多，信任就没了</div></div>
+<div class="card " data-card="8"><div class="grid"></div><div class="blob"></div>
+      <div class="kicker">07 · 两条底线</div>
+      <div class="title">段子可以让路，<span class="y">事实不行</span></div>
+      <div class="body"><div class="checks">
+        <div class="check"><i>1</i><div>每篇末尾永远附一行真实技术结论，代码层面不可关闭</div></div><div class="check"><i>2</i><div>绝不为配合段子编造技术事实</div></div><div class="check"><i>3</i><div>排查线上事故时自动切回正常表达</div></div>
+      </div></div>
+      <div class="foot">糖衣会化，药还在</div></div>
+<div class="card " data-card="9"><div class="grid"></div><div class="blob"></div>
+    <div class="end">
+      <div class="zh">不烧心</div>
+      <div class="en">dsh-bushaoxin</div>
+      <div class="line">贵是贵了点，但吃了不烧心</div>
+      <div class="hint">装完在输入框上方点「不烧心」即可调档</div>
+    </div></div>
+</div>
+<script>
+/* ?card=3 只显示第 3 张 —— 供逐张截图（渲染 PNG / 手动截图都用这个）。
+   带这个参数时同时把页面尺寸收成一张卡，截图出来就是干净的 1080×1080。 */
+const want = new URLSearchParams(location.search).get('card')
+if (want !== null && want !== ''){
+  const n = Number(want)
+  const cards = [...document.querySelectorAll('.card')]
+  cards.forEach((el, i) => { if (i + 1 !== n) el.remove() })
+  document.querySelector('.wrap').style.cssText = 'padding:0;gap:0'
+  document.body.style.background = '#040913'
+  document.title = 'card-' + n
+}
+</script>
+</body></html>

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>不烧心 · 演示</title>
+<style>
+:root{
+  --bg:#fdf8f3; --card:#fff; --ink:#2b2016; --dim:#9c8875; --dim2:#7d6a58;
+  --line:#efe3d6; --hot:#d94f2b; --hot2:#f08a3c; --cool:#2f7d5d; --warn:#9a6700;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.7 "Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+header{padding:26px 28px 18px;border-bottom:1px solid var(--line);background:#fff}
+h1{margin:0 0 6px;font-size:22px;letter-spacing:.5px}
+h1 .tag{font-size:13px;font-weight:400;color:var(--dim2);margin-left:8px}
+.sub{color:var(--dim2);font-size:13.5px;max-width:880px}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 28px 60px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.label{font-size:12.5px;color:var(--dim2);margin:18px 0 8px;letter-spacing:.4px}
+.pill{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;
+  padding:7px 15px;font-size:13.5px;cursor:pointer;transition:.15s}
+.pill:hover{border-color:var(--hot2)}
+.pill[aria-pressed="true"]{background:var(--hot);border-color:var(--hot);color:#fff;font-weight:600}
+.pill.sm{padding:5px 12px;font-size:12.5px}
+.pill.sm[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.meter{margin:14px 0 2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.meter-top{display:flex;justify-content:space-between;font-size:12.5px;color:var(--dim2);margin-bottom:8px}
+.bar{height:10px;border-radius:6px;background:linear-gradient(90deg,#e8f0e2,#f7e3b6,#f09a4a,#d94f2b);position:relative}
+.bar i{position:absolute;top:-4px;width:4px;height:18px;border-radius:3px;background:var(--ink);
+  transition:left .28s cubic-bezier(.4,1.4,.5,1);left:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  display:flex;flex-direction:column;min-height:260px}
+.panel h2{margin:0;padding:11px 16px;font-size:13px;letter-spacing:.6px;
+  border-bottom:1px solid var(--line);background:#fcf7f1;color:var(--dim2);font-weight:600}
+.panel.plain h2{background:#f4f6f8;color:#5b6b7a}
+.panel.hot h2{background:#fff3ec;color:var(--hot)}
+.body{padding:16px 18px;white-space:pre-wrap;word-break:break-word;font-size:14px;flex:1}
+.panel.plain .body{color:#4a5a68}
+.panel.hot .body{color:var(--ink)}
+.truth{margin-top:14px;padding:10px 13px;border-left:3px solid var(--cool);
+  background:#f2f9f5;border-radius:0 8px 8px 0;color:#245a44;font-size:13.5px}
+.quote{color:var(--hot);font-weight:600}
+.sample-src{font-size:12.5px;color:var(--dim2);background:#fbf6f0;border:1px dashed var(--line);
+  border-radius:8px;padding:9px 12px;font-family:ui-monospace,Consolas,monospace;word-break:break-all}
+.stylebox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:22px}
+.stylebox h2{margin:0 0 8px;font-size:14px}
+.stylebox pre{margin:0;white-space:pre-wrap;font:12.5px/1.65 ui-monospace,Consolas,monospace;
+  color:#3c4a56;background:#fbf8f4;border-radius:10px;padding:13px 15px;max-height:340px;overflow:auto}
+.knobs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.knob{font-size:12px;color:var(--dim2);background:#fbf6f0;border:1px solid var(--line);
+  border-radius:8px;padding:5px 10px}
+.knob b{color:var(--ink)}
+footer{margin-top:26px;color:var(--dim2);font-size:12.5px;border-top:1px solid var(--line);padding-top:14px}
+code{background:#f4ece4;padding:1px 5px;border-radius:4px;font-size:12.5px}
+</style>
+</head>
+<body>
+<header>
+  <h1>不烧心 <span class="tag">dsh-bushaoxin · 现场演示</span></h1>
+  <p class="sub">
+    助手每天都在说「别用 <code>--force</code>」「这个测试先别 skip」。这些话都对，但你记不住 ——
+    因为它们形式和内容都太像背景音。<b>不烧心只做一件事：给这些警告换一个归因框架。</b>
+    左半边是标准助手的说法，右半边是装了插件之后的说法，技术信息完全一致。
+  </p>
+</header>
+
+<div class="wrap">
+  <div class="label">① 选一个技术话题</div>
+  <div class="row" id="samples"></div>
+
+  <div class="label">② 选火力（辣度是旋钮的组合，不是音量）</div>
+  <div class="row" id="flavors"></div>
+
+  <div class="meter">
+    <div class="meter-top"><span>烧心指数（越大越"辣"）</span><span id="heatLabel">—</span></div>
+    <div class="bar"><i id="heatPin"></i></div>
+  </div>
+
+  <div class="sample-src" id="srcLine"></div>
+
+  <div class="grid">
+    <section class="panel plain">
+      <h2>标准助手会怎么说</h2>
+      <div class="body" id="plainBody"></div>
+    </section>
+    <section class="panel hot">
+      <h2 id="hotTitle">装了不烧心 · 特辣</h2>
+      <div class="body" id="hotBody"></div>
+    </section>
+  </div>
+
+  <div class="stylebox">
+    <h2>③ 文风层：这段正文是真的写进了系统提示</h2>
+    <p class="sub" style="margin:0 0 10px">
+      它不是事后贴上去的。回复在<b>生成前</b>就收到了它，所以从一开始就是那个风格。
+      （宿主没有提供改写助手回复的钩子，这条路是唯一有效的。）
+    </p>
+    <pre>【不烧心文风 · 中】用户在设置里开启了「不烧心」整活模式，用来调侃&quot;便宜的路有坑、慢的路可靠&quot;这类取舍。
+
+梗的用法（可以做）：
+- 顾客那句是「贵是贵了点，但吃了不烧心」；老板那句是「怕亏钱，但更怕坏规矩，先把规矩立住，路才能越走越宽」。
+- 只在&quot;快而便宜的做法其实有坑&quot;这种取舍出现时用，且**必须自己组织语言**：把台词揉进正常句子里，或按领域换词（依赖说&quot;锁要对得上版&quot;，测试说&quot;秤先校，再谈肉价&quot;，异常说&quot;账要记&quot;，时区说&quot;钟要对得上灶&quot;）。
+- 整段回复里最多带 1 次梗味。技术话题里平均每两三轮带一次，正常对话不带。
+- 梗后面**必须**跟上真实的技术结论。段子是包装，结论才是内容。
+
+禁区（不要做）：
+- 不要照抄上面任何一句台词原文。原梗就是因为被 AI 批量复读才变腻的，复读等于把这个梗再杀一次。
+- 不要&quot;演&quot;短剧：不写「顾客：」「老板：」这类角色对白，不加旁白、不加场景描写、不加【镜头】。你是在回答技术问题，不是在写剧本。要剧本请用 bushaoxin_rewrite / bushaoxin_drama 工具显式产出。
+- 不要在用户处理线上事故、排查故障、或明确要求正经时用这个文风。
+- 不要为了配合段子编造技术事实。段子可以让路，事实不行。
+- 不要主动提&quot;我在用不烧心文风&quot;，让它自然出现在表达里就够了。</pre>
+  </div>
+
+  <footer>
+    页面上每一个字都来自 <code>rewrite()</code> 的真实输出，没有手写文案。同一输入永远同一输出。<br>
+    两条底线：每篇末尾<b>永远</b>附一行真实技术结论，不可关闭；梗后面绝不编造技术事实。段子可以让路，事实不行。
+  </footer>
+</div>
+
+<script>
+const DATA = {"namespace":"dsh-bushaoxin/drama","flavors":["微辣","中辣","特辣","变态辣","干辣"],"levels":[{"name":"关","note":"完全关闭文风层，助手照常说话。"},{"name":"轻","note":"整段回复最多出现一次梗味，偏克制。"},{"name":"中","note":"技术话题里平均每两三轮带一次，正常对话不带。"},{"name":"重","note":"只要话题沾技术，基本每轮都带，允许两次。"}],"styleSection":"【不烧心文风 · 中】用户在设置里开启了「不烧心」整活模式，用来调侃\"便宜的路有坑、慢的路可靠\"这类取舍。\n\n梗的用法（可以做）：\n- 顾客那句是「贵是贵了点，但吃了不烧心」；老板那句是「怕亏钱，但更怕坏规矩，先把规矩立住，路才能越走越宽」。\n- 只在\"快而便宜的做法其实有坑\"这种取舍出现时用，且**必须自己组织语言**：把台词揉进正常句子里，或按领域换词（依赖说\"锁要对得上版\"，测试说\"秤先校，再谈肉价\"，异常说\"账要记\"，时区说\"钟要对得上灶\"）。\n- 整段回复里最多带 1 次梗味。技术话题里平均每两三轮带一次，正常对话不带。\n- 梗后面**必须**跟上真实的技术结论。段子是包装，结论才是内容。\n\n禁区（不要做）：\n- 不要照抄上面任何一句台词原文。原梗就是因为被 AI 批量复读才变腻的，复读等于把这个梗再杀一次。\n- 不要\"演\"短剧：不写「顾客：」「老板：」这类角色对白，不加旁白、不加场景描写、不加【镜头】。你是在回答技术问题，不是在写剧本。要剧本请用 bushaoxin_rewrite / bushaoxin_drama 工具显式产出。\n- 不要在用户处理线上事故、排查故障、或明确要求正经时用这个文风。\n- 不要为了配合段子编造技术事实。段子可以让路，事实不行。\n- 不要主动提\"我在用不烧心文风\"，让它自然出现在表达里就够了。","samples":[{"id":"deps","label":"依赖报错","level":"依赖","text":"Error: Cannot find module 'lodash'","plain":"缺少依赖 lodash。请执行 npm install lodash 安装后重试。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：Error: Cannot find module 'lodash'（提到 Error）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n\n📍 **技术真话**：Cannot find module 'x' 就是 x 没装在当前解析路径下。先确认它是 dependencies 还是 devDependencies，再确认你装在了哪个目录。","中辣":"【不烧心 · 中辣】\n> 物证：Error: Cannot find module 'lodash'（提到 Error）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 那家「一键装依赖」的店挂出招牌：**「充值即送 --force，三秒解决，包过。」**\n\n📍 **技术真话**：Cannot find module 'x' 就是 x 没装在当前解析路径下。先确认它是 dependencies 还是 devDependencies，再确认你装在了哪个目录。","特辣":"【不烧心 · 特辣】\n> 物证：Error: Cannot find module 'lodash'（提到 Error）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 那家「一键装依赖」的店挂出招牌：**「充值即送 --force，三秒解决，包过。」**\n> 它没说它改了什么，也没说它没看你的 Node 版本。\n> 它给了个一闪而过的结论：装一下就好\n> 装完还是找不到——因为缺的那个包压根不在你编辑的那个 package.json 里。\n> 老店这边报价一直不好看：先看清 lockfile，再对版本，最后才敢动手。\n> 「锁要对得上版，版要对得上货。」\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：Cannot find module 'x' 就是 x 没装在当前解析路径下。先确认它是 dependencies 还是 devDependencies，再确认你装在了哪个目录。","变态辣":"【不烧心 · 变态辣】\n> 物证：Error: Cannot find module 'lodash'（提到 Error）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 那家「一键装依赖」的店挂出招牌：**「充值即送 --force，三秒解决，包过。」**\n> 它没说它改了什么，也没说它没看你的 Node 版本。\n> 它给了个一闪而过的结论：装一下就好\n> 装完还是找不到——因为缺的那个包压根不在你编辑的那个 package.json 里。\n> 老店这边报价一直不好看：先看清 lockfile，再对版本，最后才敢动手。\n> 「锁要对得上版，版要对得上货。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n> 「先对版，再下锅。」\n\n📍 **技术真话**：Cannot find module 'x' 就是 x 没装在当前解析路径下。先确认它是 dependencies 还是 devDependencies，再确认你装在了哪个目录。","干辣":"【不烧心 · 干辣】\n> 物证：Error: Cannot find module 'lodash'（提到 Error）\n\n> 那家「一键装依赖」的店挂出招牌：**「充值即送 --force，三秒解决，包过。」**\n> 它给了个一闪而过的结论：装一下就好\n> 装完还是找不到——因为缺的那个包压根不在你编辑的那个 package.json 里。\n\n📍 **技术真话**：Cannot find module 'x' 就是 x 没装在当前解析路径下。先确认它是 dependencies 还是 devDependencies，再确认你装在了哪个目录。"}},{"id":"force","label":"--force 的坑","level":"依赖","text":"npm install --force 之后本地能跑，CI 挂了","plain":"不建议使用 --force，它会导致 lockfile 与 package.json 不一致，可能引发构建失败。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：npm install --force 之后本地能跑，CI 挂了（提到 npm）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n\n📍 **技术真话**：--force 会让 lockfile 与 package.json 脱节，本地能跑、CI 挂掉。先 git diff package-lock.json 再决定要不要留。","中辣":"【不烧心 · 中辣】\n> 物证：npm install --force 之后本地能跑，CI 挂了（提到 npm）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 那家「一键装依赖」的店挂出招牌：**「充值即送 --force，三秒解决，包过。」**\n\n📍 **技术真话**：--force 会让 lockfile 与 package.json 脱节，本地能跑、CI 挂掉。先 git diff package-lock.json 再决定要不要留。","特辣":"【不烧心 · 特辣】\n> 物证：npm install --force 之后本地能跑，CI 挂了（提到 npm）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 那家「一键装依赖」的店挂出招牌：**「充值即送 --force，三秒解决，包过。」**\n> 它没说它改了什么，也没说它没看你的 Node 版本。\n> node_modules 炒得喷香，package-lock.json 也顺手给你改了\n> 构建在 CI 上翻车。那锅料端出来的时候谁都看懂了——它压根没看你的 Node 版本。\n> 老店这边报价一直不好看：先看清 lockfile，再对版本，最后才敢动手。\n> 「锁要对得上版，版要对得上货。」\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：--force 会让 lockfile 与 package.json 脱节，本地能跑、CI 挂掉。先 git diff package-lock.json 再决定要不要留。","变态辣":"【不烧心 · 变态辣】\n> 物证：npm install --force 之后本地能跑，CI 挂了（提到 npm）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 那家「一键装依赖」的店挂出招牌：**「充值即送 --force，三秒解决，包过。」**\n> 它没说它改了什么，也没说它没看你的 Node 版本。\n> node_modules 炒得喷香，package-lock.json 也顺手给你改了\n> 构建在 CI 上翻车。那锅料端出来的时候谁都看懂了——它压根没看你的 Node 版本。\n> 老店这边报价一直不好看：先看清 lockfile，再对版本，最后才敢动手。\n> 「锁要对得上版，版要对得上货。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n> 「先对版，再下锅。」\n\n📍 **技术真话**：--force 会让 lockfile 与 package.json 脱节，本地能跑、CI 挂掉。先 git diff package-lock.json 再决定要不要留。","干辣":"【不烧心 · 干辣】\n> 物证：npm install --force 之后本地能跑，CI 挂了（提到 npm）\n\n> 那家「一键装依赖」的店挂出招牌：**「充值即送 --force，三秒解决，包过。」**\n> node_modules 炒得喷香，package-lock.json 也顺手给你改了\n> 构建在 CI 上翻车。那锅料端出来的时候谁都看懂了——它压根没看你的 Node 版本。\n\n📍 **技术真话**：--force 会让 lockfile 与 package.json 脱节，本地能跑、CI 挂掉。先 git diff package-lock.json 再决定要不要留。"}},{"id":"test","label":"测试想 skip","level":"测试","text":"FAIL test/parser.test.ts ✕ 解析器 应忽略行尾注释","plain":"该用例失败。建议先修复失败原因，不要跳过（skip）测试用例。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：FAIL test/parser.test.ts ✕ 解析器 应忽略行尾注释（提到 FAIL）\n\n> 顾客：「红了就先看红在哪。」\n\n📍 **技术真话**：skip 不会让用例消失，只会把失败延后到线上。先修根因（比如 \\r\\n 处理），再谈覆盖率。","中辣":"【不烧心 · 中辣】\n> 物证：FAIL test/parser.test.ts ✕ 解析器 应忽略行尾注释（提到 FAIL）\n\n> 顾客：「红了就先看红在哪。」\n> 那家「先发版」的铺子挂出招牌：**「反正只差几个点，先把发布发了。」**\n\n📍 **技术真话**：skip 不会让用例消失，只会把失败延后到线上。先修根因（比如 \\r\\n 处理），再谈覆盖率。","特辣":"【不烧心 · 特辣】\n> 物证：FAIL test/parser.test.ts ✕ 解析器 应忽略行尾注释（提到 FAIL）\n\n> 顾客：「红了就先看红在哪。」\n> 那家「先发版」的铺子挂出招牌：**「反正只差几个点，先把发布发了。」**\n> 它上菜是真快。快到你把「回头补」这三个字说了三十遍。\n> 那条用例被跳过，测试报告立刻变绿\n> 三个礼拜后线上炸了——用户配置里的注释被整行吞掉，静默出错，一条告警都没有。\n> 老店这边报价一直不好看：把红着的用例拆开看，补一条回归，再谈覆盖率。\n> 「别让用例替你闭嘴。」\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：skip 不会让用例消失，只会把失败延后到线上。先修根因（比如 \\r\\n 处理），再谈覆盖率。","变态辣":"【不烧心 · 变态辣】\n> 物证：FAIL test/parser.test.ts ✕ 解析器 应忽略行尾注释（提到 FAIL）\n\n> 顾客：「红了就先看红在哪。」\n> 那家「先发版」的铺子挂出招牌：**「反正只差几个点，先把发布发了。」**\n> 它上菜是真快。快到你把「回头补」这三个字说了三十遍。\n> 那条用例被跳过，测试报告立刻变绿\n> 三个礼拜后线上炸了——用户配置里的注释被整行吞掉，静默出错，一条告警都没有。\n> 老店这边报价一直不好看：把红着的用例拆开看，补一条回归，再谈覆盖率。\n> 「别让用例替你闭嘴。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n> 「贵是贵了点，但吃了不烧心。」\n\n📍 **技术真话**：skip 不会让用例消失，只会把失败延后到线上。先修根因（比如 \\r\\n 处理），再谈覆盖率。","干辣":"【不烧心 · 干辣】\n> 物证：FAIL test/parser.test.ts ✕ 解析器 应忽略行尾注释（提到 FAIL）\n\n> 那家「先发版」的铺子挂出招牌：**「反正只差几个点，先把发布发了。」**\n> 那条用例被跳过，测试报告立刻变绿\n> 三个礼拜后线上炸了——用户配置里的注释被整行吞掉，静默出错，一条告警都没有。\n\n📍 **技术真话**：skip 不会让用例消失，只会把失败延后到线上。先修根因（比如 \\r\\n 处理），再谈覆盖率。"}},{"id":"catch","label":"空的 catch","level":"异常","text":"catch {} 是空的，建议处理异常或至少记录日志。","plain":"空的 catch 块会吞掉异常。建议至少记录日志，或向上抛出。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：catch {} 是空的，建议处理异常或至少记录日志。（提到 catch）\n\n> 顾客：「响一声不丢人，丢人的是没人知道。」\n\n📍 **技术真话**：catch 里至少要带上 error 本身（栈、code、message），否则你只剩一个自我安慰的提示语。","中辣":"【不烧心 · 中辣】\n> 物证：catch {} 是空的，建议处理异常或至少记录日志。（提到 catch）\n\n> 顾客：「响一声不丢人，丢人的是没人知道。」\n> 隔壁那个「精简」流派挂出招牌：**「catch {} 就完了，日志多了看着烦，还影响性能。」**\n\n📍 **技术真话**：catch 里至少要带上 error 本身（栈、code、message），否则你只剩一个自我安慰的提示语。","特辣":"【不烧心 · 特辣】\n> 物证：catch {} 是空的，建议处理异常或至少记录日志。（提到 catch）\n\n> 顾客：「响一声不丢人，丢人的是没人知道。」\n> 隔壁那个「精简」流派挂出招牌：**「catch {} 就完了，日志多了看着烦，还影响性能。」**\n> 它把「什么都不做」包装成了「优雅」。\n> 每个 catch 都回了个「操作失败」，干干净净\n> 三个月后没人能说出它到底失败在哪一步——因为失败的原因被那句「操作失败」替换掉了。\n> 老店这边报价一直不好看：多三行日志，多一个告警，多花你十分钟。\n> 「亏要吃在明处。」\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：catch 里至少要带上 error 本身（栈、code、message），否则你只剩一个自我安慰的提示语。","变态辣":"【不烧心 · 变态辣】\n> 物证：catch {} 是空的，建议处理异常或至少记录日志。（提到 catch）\n\n> 顾客：「响一声不丢人，丢人的是没人知道。」\n> 隔壁那个「精简」流派挂出招牌：**「catch {} 就完了，日志多了看着烦，还影响性能。」**\n> 它把「什么都不做」包装成了「优雅」。\n> 每个 catch 都回了个「操作失败」，干干净净\n> 三个月后没人能说出它到底失败在哪一步——因为失败的原因被那句「操作失败」替换掉了。\n> 老店这边报价一直不好看：多三行日志，多一个告警，多花你十分钟。\n> 「亏要吃在明处。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n> 「账要记。」\n\n📍 **技术真话**：catch 里至少要带上 error 本身（栈、code、message），否则你只剩一个自我安慰的提示语。","干辣":"【不烧心 · 干辣】\n> 物证：catch {} 是空的，建议处理异常或至少记录日志。（提到 catch）\n\n> 隔壁那个「精简」流派挂出招牌：**「catch {} 就完了，日志多了看着烦，还影响性能。」**\n> 每个 catch 都回了个「操作失败」，干干净净\n> 三个月后没人能说出它到底失败在哪一步——因为失败的原因被那句「操作失败」替换掉了。\n\n📍 **技术真话**：catch 里至少要带上 error 本身（栈、code、message），否则你只剩一个自我安慰的提示语。"}},{"id":"commit","label":"commit message","level":"提交","text":"fix: 修复登录偶发失败","plain":"提交信息过于笼统，建议说明根因、影响范围与回滚方式。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：fix: 修复登录偶发失败（提到 fix）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n\n📍 **技术真话**：commit 正文写清「为什么改」，是留给半年后 git blame 的你自己。写「偶发」等于没修。","中辣":"【不烧心 · 中辣】\n> 物证：fix: 修复登录偶发失败（提到 fix）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 隔壁的提交只要一行挂出招牌：**「修复偶发问题——完。」**\n\n📍 **技术真话**：commit 正文写清「为什么改」，是留给半年后 git blame 的你自己。写「偶发」等于没修。","特辣":"【不烧心 · 特辣】\n> 物证：fix: 修复登录偶发失败（提到 fix）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 隔壁的提交只要一行挂出招牌：**「修复偶发问题——完。」**\n> 快捷、便宜、好交付。\n> 三个月后它又被端上来一次，还是同一道菜\n> 没人知道上次到底改了什么，包括去年改的那个人。\n> 老店这边报价一直不好看：复现步骤，根因，影响范围，回滚方式。\n> 「名字写全，别让半年后的自己猜。」\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：commit 正文写清「为什么改」，是留给半年后 git blame 的你自己。写「偶发」等于没修。","变态辣":"【不烧心 · 变态辣】\n> 物证：fix: 修复登录偶发失败（提到 fix）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 隔壁的提交只要一行挂出招牌：**「修复偶发问题——完。」**\n> 快捷、便宜、好交付。\n> 三个月后它又被端上来一次，还是同一道菜\n> 没人知道上次到底改了什么，包括去年改的那个人。\n> 老店这边报价一直不好看：复现步骤，根因，影响范围，回滚方式。\n> 「名字写全，别让半年后的自己猜。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n> 「一句话说不清的改动，通常也没想清。」\n\n📍 **技术真话**：commit 正文写清「为什么改」，是留给半年后 git blame 的你自己。写「偶发」等于没修。","干辣":"【不烧心 · 干辣】\n> 物证：fix: 修复登录偶发失败（提到 fix）\n\n> 隔壁的提交只要一行挂出招牌：**「修复偶发问题——完。」**\n> 三个月后它又被端上来一次，还是同一道菜\n> 没人知道上次到底改了什么，包括去年改的那个人。\n\n📍 **技术真话**：commit 正文写清「为什么改」，是留给半年后 git blame 的你自己。写「偶发」等于没修。"}},{"id":"secret","label":".env 被提交","level":"密钥","text":"WARNING: .env 已被 git 跟踪","plain":"检测到 .env 已被 git 跟踪。请移除并轮换其中包含的密钥。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：WARNING: .env 已被 git 跟踪（提到 WARNING）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n\n📍 **技术真话**：已经进了历史的密钥，改代码救不回来——必须去轮换，再用 git filter-repo 清历史。","中辣":"【不烧心 · 中辣】\n> 物证：WARNING: .env 已被 git 跟踪（提到 WARNING）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 「本地能跑就行」派挂出招牌：**「.env 提交一下，方便大家。」**\n\n📍 **技术真话**：已经进了历史的密钥，改代码救不回来——必须去轮换，再用 git filter-repo 清历史。","特辣":"【不烧心 · 特辣】\n> 物证：WARNING: .env 已被 git 跟踪（提到 WARNING）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 「本地能跑就行」派挂出招牌：**「.env 提交一下，方便大家。」**\n> 它方便了所有人，包括不该看到它的那些人。\n> .env 进了仓库，团队每个人都能跑起来了\n> 第五遍的时候，密钥被扫出来了。当年劝他别提交的那个人，被请了回来。\n> 老店这边报价一直不好看：先把密钥挪进密钥管理，再轮换，最后清历史。\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：已经进了历史的密钥，改代码救不回来——必须去轮换，再用 git filter-repo 清历史。","变态辣":"【不烧心 · 变态辣】\n> 物证：WARNING: .env 已被 git 跟踪（提到 WARNING）\n\n> 顾客：「贵是贵了点，但吃了不烧心。」\n> 「本地能跑就行」派挂出招牌：**「.env 提交一下，方便大家。」**\n> 它方便了所有人，包括不该看到它的那些人。\n> .env 进了仓库，团队每个人都能跑起来了\n> 第五遍的时候，密钥被扫出来了。当年劝他别提交的那个人，被请了回来。\n> 老店这边报价一直不好看：先把密钥挪进密钥管理，再轮换，最后清历史。\n> 「锁要对得上版，版要对得上货。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n\n📍 **技术真话**：已经进了历史的密钥，改代码救不回来——必须去轮换，再用 git filter-repo 清历史。","干辣":"【不烧心 · 干辣】\n> 物证：WARNING: .env 已被 git 跟踪（提到 WARNING）\n\n> 「本地能跑就行」派挂出招牌：**「.env 提交一下，方便大家。」**\n> .env 进了仓库，团队每个人都能跑起来了\n> 第五遍的时候，密钥被扫出来了。当年劝他别提交的那个人，被请了回来。\n\n📍 **技术真话**：已经进了历史的密钥，改代码救不回来——必须去轮换，再用 git filter-repo 清历史。"}},{"id":"tz","label":"时区差一天","level":"时区","text":"报告日期比实际早一天","plain":"日期计算存在时区偏移问题，建议统一使用 UTC 存储与计算。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：报告日期比实际早一天\n\n> 顾客：「钟要对得上灶。」\n\n📍 **技术真话**：事件时间存本地时间还是 UTC，要在入口就定死。跨时区算日期一律先转 UTC，展示层再转回来。","中辣":"【不烧心 · 中辣】\n> 物证：报告日期比实际早一天\n\n> 顾客：「钟要对得上灶。」\n> 隔壁的日报每天准时早一天挂出招牌：**「存本地时间就行，反正都是同一批人看。」**\n\n📍 **技术真话**：事件时间存本地时间还是 UTC，要在入口就定死。跨时区算日期一律先转 UTC，展示层再转回来。","特辣":"【不烧心 · 特辣】\n> 物证：报告日期比实际早一天\n\n> 顾客：「钟要对得上灶。」\n> 隔壁的日报每天准时早一天挂出招牌：**「存本地时间就行，反正都是同一批人看。」**\n> 它不缺料、不缺火——缺一块表。\n> 报表上的跨时区活动，被归到了前一天\n> 连着出了三次事故，才有人去看那块表。\n> 老店这边报价一直不好看：入口统一转 UTC，展示层再转本地，边界用例补测试。\n> 「贵是贵了点，但吃了不烧心。」\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：事件时间存本地时间还是 UTC，要在入口就定死。跨时区算日期一律先转 UTC，展示层再转回来。","变态辣":"【不烧心 · 变态辣】\n> 物证：报告日期比实际早一天\n\n> 顾客：「钟要对得上灶。」\n> 隔壁的日报每天准时早一天挂出招牌：**「存本地时间就行，反正都是同一批人看。」**\n> 它不缺料、不缺火——缺一块表。\n> 报表上的跨时区活动，被归到了前一天\n> 连着出了三次事故，才有人去看那块表。\n> 老店这边报价一直不好看：入口统一转 UTC，展示层再转本地，边界用例补测试。\n> 「贵是贵了点，但吃了不烧心。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n\n📍 **技术真话**：事件时间存本地时间还是 UTC，要在入口就定死。跨时区算日期一律先转 UTC，展示层再转回来。","干辣":"【不烧心 · 干辣】\n> 物证：报告日期比实际早一天\n\n> 隔壁的日报每天准时早一天挂出招牌：**「存本地时间就行，反正都是同一批人看。」**\n> 报表上的跨时区活动，被归到了前一天\n> 连着出了三次事故，才有人去看那块表。\n\n📍 **技术真话**：事件时间存本地时间还是 UTC，要在入口就定死。跨时区算日期一律先转 UTC，展示层再转回来。"}},{"id":"dist","label":"提交 dist","level":"产物","text":"想把 dist/ 一并提交，方便部署","plain":"不建议将构建产物纳入版本控制，应使用制品库或流水线产物。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：想把 dist/ 一并提交，方便部署（提到 dist）\n\n> 顾客：「秤归秤，货归货。」\n\n📍 **技术真话**：构建产物进版本库会把 diff 变成噪音，并让每次冲突都无法人工合并。用制品库或流水线产物。","中辣":"【不烧心 · 中辣】\n> 物证：想把 dist/ 一并提交，方便部署（提到 dist）\n\n> 顾客：「秤归秤，货归货。」\n> 「提交一下方便部署」派挂出招牌：**「把 dist 一并提交，部署省事。」**\n\n📍 **技术真话**：构建产物进版本库会把 diff 变成噪音，并让每次冲突都无法人工合并。用制品库或流水线产物。","特辣":"【不烧心 · 特辣】\n> 物证：想把 dist/ 一并提交，方便部署（提到 dist）\n\n> 顾客：「秤归秤，货归货。」\n> 「提交一下方便部署」派挂出招牌：**「把 dist 一并提交，部署省事。」**\n> 方便了三周。\n> dist 提交之后，部署确实简单了\n> 三周后两个人同时改了同一个压缩文件，Git 给出的建议是：「你们自己选一个。」\n> 老店这边报价一直不好看：产物交给制品库，构建交给流水线，仓库只放源。\n> 「仓库不是仓库房。」\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：构建产物进版本库会把 diff 变成噪音，并让每次冲突都无法人工合并。用制品库或流水线产物。","变态辣":"【不烧心 · 变态辣】\n> 物证：想把 dist/ 一并提交，方便部署（提到 dist）\n\n> 顾客：「秤归秤，货归货。」\n> 「提交一下方便部署」派挂出招牌：**「把 dist 一并提交，部署省事。」**\n> 方便了三周。\n> dist 提交之后，部署确实简单了\n> 三周后两个人同时改了同一个压缩文件，Git 给出的建议是：「你们自己选一个。」\n> 老店这边报价一直不好看：产物交给制品库，构建交给流水线，仓库只放源。\n> 「仓库不是仓库房。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n> 「贵是贵了点，但吃了不烧心。」\n\n📍 **技术真话**：构建产物进版本库会把 diff 变成噪音，并让每次冲突都无法人工合并。用制品库或流水线产物。","干辣":"【不烧心 · 干辣】\n> 物证：想把 dist/ 一并提交，方便部署（提到 dist）\n\n> 「提交一下方便部署」派挂出招牌：**「把 dist 一并提交，部署省事。」**\n> dist 提交之后，部署确实简单了\n> 三周后两个人同时改了同一个压缩文件，Git 给出的建议是：「你们自己选一个。」\n\n📍 **技术真话**：构建产物进版本库会把 diff 变成噪音，并让每次冲突都无法人工合并。用制品库或流水线产物。"}},{"id":"html","label":"HTML 转义","level":"异常","text":"渲染 \u003cdiv> 时没有转义用户输入，有 XSS 风险","plain":"渲染用户输入时必须做 HTML 转义，否则会产生 XSS 漏洞。","results":{"微辣":"【不烧心 · 微辣】\n> 物证：渲染 \u003cdiv> 时没有转义用户输入，有 XSS 风险（提到 div）\n\n> 顾客：「亏要吃在明处。」\n\n📍 **技术真话**：兜住异常的同时要留下证据：谁、在哪、什么原因。","中辣":"【不烧心 · 中辣】\n> 物证：渲染 \u003cdiv> 时没有转义用户输入，有 XSS 风险（提到 div）\n\n> 顾客：「亏要吃在明处。」\n> 隔壁那个「精简」流派挂出招牌：**「catch {} 就完了，日志多了看着烦，还影响性能。」**\n\n📍 **技术真话**：兜住异常的同时要留下证据：谁、在哪、什么原因。","特辣":"【不烧心 · 特辣】\n> 物证：渲染 \u003cdiv> 时没有转义用户输入，有 XSS 风险（提到 div）\n\n> 顾客：「亏要吃在明处。」\n> 隔壁那个「精简」流派挂出招牌：**「catch {} 就完了，日志多了看着烦，还影响性能。」**\n> 它把「什么都不做」包装成了「优雅」。\n> 异常被兜住了，流程没中断\n> 也再没人知道它出过事。\n> 老店这边报价一直不好看：多三行日志，多一个告警，多花你十分钟。\n> 「响一声不丢人，丢人的是没人知道。」\n> 它后来又挂了个新招牌：「本店承诺，绝对不翻车。」\n\n📍 **技术真话**：兜住异常的同时要留下证据：谁、在哪、什么原因。","变态辣":"【不烧心 · 变态辣】\n> 物证：渲染 \u003cdiv> 时没有转义用户输入，有 XSS 风险（提到 div）\n\n> 顾客：「亏要吃在明处。」\n> 隔壁那个「精简」流派挂出招牌：**「catch {} 就完了，日志多了看着烦，还影响性能。」**\n> 它把「什么都不做」包装成了「优雅」。\n> 异常被兜住了，流程没中断\n> 也再没人知道它出过事。\n> 老店这边报价一直不好看：多三行日志，多一个告警，多花你十分钟。\n> 「响一声不丢人，丢人的是没人知道。」\n> （各位看官，这段「先立规矩」的台词，隔壁流水线上也印得出来，论斤称。）\n> 「贵是贵了点，但吃了不烧心。」\n\n📍 **技术真话**：兜住异常的同时要留下证据：谁、在哪、什么原因。","干辣":"【不烧心 · 干辣】\n> 物证：渲染 \u003cdiv> 时没有转义用户输入，有 XSS 风险（提到 div）\n\n> 隔壁那个「精简」流派挂出招牌：**「catch {} 就完了，日志多了看着烦，还影响性能。」**\n> 异常被兜住了，流程没中断\n> 也再没人知道它出过事。\n\n📍 **技术真话**：兜住异常的同时要留下证据：谁、在哪、什么原因。"}}]}
+const HEAT = {"微辣":18,"中辣":42,"特辣":74,"变态辣":92,"干辣":6}
+let sampleId = DATA.samples[0].id
+let flavor = '特辣'
+
+function render(){
+  const s = DATA.samples.find(x => x.id === sampleId)
+  document.getElementById('srcLine').textContent = '输入：' + s.text
+  document.getElementById('plainBody').textContent = s.plain
+
+  const script = s.results[flavor] || ''
+  const marked = script
+    .replace(/^📍 \*\*技术真话\*\*：.*$/m, '')
+    .replace(/贵是贵了点，但吃了不烧心/g, '<span class="quote">贵是贵了点，但吃了不烧心</span>')
+    .trimEnd()
+  const truthMatch = script.match(/^📍 \*\*技术真话\*\*：(.*)$/m)
+  const truth = truthMatch ? truthMatch[1] : ''
+  document.getElementById('hotTitle').textContent = '装了不烧心 · ' + flavor + '（' + s.level + '）'
+  document.getElementById('hotBody').innerHTML =
+    marked + (truth ? '<div class="truth">📍 ' + truth + '</div>' : '')
+
+  const heat = HEAT[flavor] ?? 0
+  document.getElementById('heatPin').style.left = 'calc(' + heat + '% - 2px)'
+  document.getElementById('heatLabel').textContent = heat + ' / 100 · ' + flavor
+}
+
+function pills(host, items, isOn, onPick){
+  host.innerHTML = ''
+  for (const item of items){
+    const b = document.createElement('button')
+    b.className = 'pill' + (item.small ? ' sm' : '')
+    b.type = 'button'
+    b.textContent = item.label
+    b.setAttribute('aria-pressed', String(isOn(item.value)))
+    b.onclick = () => onPick(item.value)
+    host.appendChild(b)
+  }
+}
+
+function paint(){
+  pills(document.getElementById('samples'),
+    DATA.samples.map(s => ({ label: s.label, value: s.id })),
+    v => v === sampleId,
+    v => { sampleId = v; paint() })
+  pills(document.getElementById('flavors'),
+    DATA.flavors.map(f => ({ label: f, value: f, small: true })),
+    v => v === flavor,
+    v => { flavor = v; paint() })
+  render()
+}
+
+paint()
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# 依赖目录（本项目零依赖，只是防手滑）
+node_modules/
+
+# 生成的图片素材 —— 都能用脚本重新生成，不进版本库
+# 重新生成：npm run demo && npm run video && npm run cards
+cover-ref-small.png
+cover-ref-720.png
+test/cover-*.png
+test/cards/*.png
+test/cards/*.jpg
+test/cover-*-tiny.jpg
+
+# 运行产物
+*.log
+test/_out.txt
+test/_o.txt
+test/phase1-out.txt
+test/phase1-err.txt
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
