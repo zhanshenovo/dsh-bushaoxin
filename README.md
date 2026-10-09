@@ -16,16 +16,30 @@
 
 ---
 
-## 快速上手
+## 安装
+
+**别人的机器上（从 GitHub 装）**——已实测可用：
 
 ```bash
-# 装进你的 DSH profile（和装其它本地插件一样）
+dsh plugin --profile <你的profile> add github:zhanshenovo/dsh-bushaoxin
+```
+
+一条命令就够。它会做三件事：拉取仓库、装进 profile 的 `node_modules`、
+**自动把 `dsh-bushaoxin` 加进 `dsh.profile.bundles`**（不需要你手改任何文件）。
+然后重启 DSH 即可。
+
+> `github:` 简写会被解析成 `git+https://`，**不需要配 SSH key**。
+> 也接受完整地址：`add git+https://github.com/zhanshenovo/dsh-bushaoxin.git`。
+
+**本机开发时（从工作区装）**：
+
+```bash
 dsh plugin --profile <你的profile> add <本仓库路径>
 ```
 
-然后在 profile 的 `dsh.profile.bundles` 里加上 `"dsh-bushaoxin"`，重启 DSH。
+装成本地链接（junction / symlink），改代码不用重装，重启即生效。
 
-**验证它能跑：**
+**验证它跑起来了：**
 
 ```
 /bushaoxin_rewrite preset=特辣 npm install --force 之后本地能跑，CI 挂了
@@ -33,6 +47,24 @@ dsh plugin --profile <你的profile> add <本仓库路径>
 
 看到「隔壁那家『一键装依赖』的店挂出招牌」就是成功了。输入框上方还会多一个「🔥 不烧心」，
 点一下向上拉出滑条，四档调强度。
+
+**验证安装完整（可选）：**
+
+```bash
+cd <profile>/node_modules/dsh-bushaoxin && npm test
+```
+
+---
+
+## 卸载
+
+```bash
+dsh plugin --profile <你的profile> remove dsh-bushaoxin
+```
+
+依赖和 `dsh.profile.bundles` 里的条目都会被清掉（已实测），重启 DSH 即可。
+
+详细的安装说明与排错见 **[INSTALL.md](INSTALL.md)**。
 
 ---
 

@@ -12,8 +12,11 @@
   "files": [
     "lib/",
     "client/",
+    "test/",
     "cordis.patch.yml",
-    "README.md"
+    "LICENSE",
+    "README.md",
+    "INSTALL.md"
   ],
   "scripts": {
     "test": "node test/selftest.mjs && node test/drama-selftest.mjs",
