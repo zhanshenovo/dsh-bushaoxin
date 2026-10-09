@@ -10,7 +10,8 @@
  *
  * Run: node test/selftest.mjs
  */
-import { readFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -111,6 +112,44 @@ const host = {
   },
 }
 
+/**
+ * 造一个假的 DSH home 当被测对象。
+ *
+ * 之前这里直接用 process.env.DSH_HOME（也就是本机真实的 ~/.dsh），
+ * 于是「报告里有没有 profile」「有没有插件」这两条断言的通过与否
+ * 取决于**这台机器装了什么** —— 本地绿、CI 红，测的是环境不是逻辑。
+ *
+ * 现在给一个确定性的 fixture：一个 profile、两个插件（属性正好相反）。
+ */
+const FIXTURE_HOME = mkdtempSync(join(tmpdir(), 'bushaoxin-selftest-'))
+
+const writePlugin = (name, manifest) => {
+  const dir = join(FIXTURE_HOME, 'profiles', 'fixture-profile', 'node_modules', name)
+  mkdirSync(dir, { recursive: true })
+  writeFileSync(join(dir, 'package.json'), JSON.stringify({ name, version: '1.0.0', ...manifest }, null, 2), 'utf8')
+}
+
+mkdirSync(join(FIXTURE_HOME, 'profiles', 'fixture-profile'), { recursive: true })
+writeFileSync(
+  join(FIXTURE_HOME, 'profiles', 'fixture-profile', 'package.json'),
+  JSON.stringify({
+    name: 'fixture-profile',
+    private: true,
+    dependencies: { 'fixture-clean': '1.0.0', 'fixture-postinstall': '2.0.0' },
+  }, null, 2),
+  'utf8',
+)
+// 一个干净的：没有安装期脚本
+writePlugin('fixture-clean', { description: '一个干净的测试插件', license: 'MIT' })
+// 一个要警惕的：声明了 postinstall
+writePlugin('fixture-postinstall', {
+  description: '一个带安装期脚本的测试插件',
+  license: 'MIT',
+  scripts: { postinstall: 'node ./setup.js' },
+})
+
+process.env.DSH_HOME = FIXTURE_HOME
+
 const listeners = new Map()
 const ctx = {
   inject(services, callback) {
@@ -125,7 +164,7 @@ const ctx = {
   },
 }
 
-apply(ctx, { dshHome: process.env.DSH_HOME })
+apply(ctx, { dshHome: FIXTURE_HOME })
 
 const injectedServices = injected.flat()
 check('injects the webServer service', injectedServices.includes('webServer'))
@@ -364,6 +403,15 @@ check('report carries a disclaimer', typeof report.disclaimer === 'string' && re
 
 const plugins = report.profiles.flatMap((profile) => profile.plugins)
 check('report covers at least one installed plugin', plugins.length > 0)
+// 断言"审计真的解析了我们放的 fixture"，而不是"本机碰巧有插件"。
+const auditedNames = plugins.map((plugin) => plugin.package)
+check('审计读到了 fixture 里的两个插件',
+  auditedNames.includes('fixture-clean') && auditedNames.includes('fixture-postinstall'),
+  auditedNames.join(', '))
+const warned = plugins.find((plugin) => plugin.package === 'fixture-postinstall')
+check('审计认出了安装期脚本的风险',
+  JSON.stringify(warned ?? {}).includes('postinstall'),
+  JSON.stringify(warned ?? {}).slice(0, 200))
 const shapeOk = plugins.every((plugin) =>
   typeof plugin.package === 'string'
   && plugin.package.length > 0
@@ -675,6 +723,9 @@ check('宿主机绝时明确告知只存在本地',
   offlineText.includes('只存在本地') && offlineText.includes('未能同步到宿主'), offlineText.slice(0, 200))
 
 // ---------------------------------------------------------------------- result
+
+// 测试用的假 DSH home 用完就删，别在临时目录里堆垃圾。
+rmSync(FIXTURE_HOME, { recursive: true, force: true })
 
 if (logs.length > 0) console.log(`\nhost warnings: ${logs.join(' | ')}`)
 
