@@ -23,3 +23,5 @@ test/phase1-err.txt
 .DS_Store
 Thumbs.db
 desktop.ini
+
+tools/_b64.txt
