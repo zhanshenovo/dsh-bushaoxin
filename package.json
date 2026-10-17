@@ -61,5 +61,12 @@
   "bugs": {
     "url": "https://github.com/zhanshenovo/dsh-bushaoxin/issues"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "license": "MIT"
 }
