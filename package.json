@@ -12,7 +12,13 @@
   "files": [
     "lib/",
     "client/",
-    "test/",
+    "test/*.mjs",
+    "test/*.txt",
+    "test/*.srt",
+    "test/*.md",
+    "tools/*.mjs",
+    "screenshots.json",
+    "screenshots/",
     "cordis.patch.yml",
     "LICENSE",
     "README.md",
@@ -22,7 +28,9 @@
     "test": "node test/selftest.mjs && node test/drama-selftest.mjs",
     "preview": "node test/preview.mjs",
     "demo": "node test/demo-script.mjs && node test/demo-card.mjs",
-    "video": "node test/video-assets.mjs"
+    "video": "node test/video-assets.mjs",
+    "cards": "node test/cards.mjs",
+    "screenshots": "node tools/make-screenshots.mjs"
   },
   "dsh": {
     "client": {
